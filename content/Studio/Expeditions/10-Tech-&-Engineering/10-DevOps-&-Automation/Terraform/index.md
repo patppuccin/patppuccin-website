@@ -52,7 +52,7 @@ Terraform is an [Thesaurus/Infrastructure as Code](/Thesaurus/Infrastructure%20a
 
 ### Terraform Architecture
 
-![Terraform-Architecture.png](../../../../../Appendix/Terraform-Architecture.png)
+
 
 1. **Terraform Configuration Files (.tf)**
     - Configuration files are written in *HashiCorp Configuration Language (HCL)* which is similar to JSON.
@@ -217,7 +217,7 @@ Following are some simple Terraform projects to understand the basic workflow in
 
 ##### HashiCorp/Terraform Cloud
 - HashiCorp also has a cloud offering to manage the resources maintained by their products.
-- Terraform cloud is a subset of cloud offerings by HashiCorp and can be found [here]([Terraform](https://cloud.hashicorp.com/products/terraform)).
+- Terraform cloud is a subset of cloud offerings by HashiCorp and can be found [here](Terraform.md)).
 
 ##### Amazon S3 
 - For this configuration, an [Amazon S3](../../../../../../Amazon%20Simple%20Storage%20Service.md) bucket as well as a [DynamoDB](../../../../../../Amazon%20DynamoDB.md) table needs to be set up.
