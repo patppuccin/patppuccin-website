@@ -17,7 +17,7 @@ Kubernetes operates based on a master-node architecture, where the *master node*
 
 ## Comparing BMs, VMs and Containers
 
-![BMs-VMs-Containers.png](../../../../../Appendix/BMs-VMs-Containers.png)
+
 
 | Specification           | Bare Metal (BMs)                                                                     | Virtual Machines (VMs)                                                                   | Containers                                                                                     |
 | ----------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -151,7 +151,7 @@ In a Kubernetes cluster, the Master Node plays a pivotal role in *orchestrating*
 
 > [!NOTE]- Why was docker support suspended by kubernetes?
 > 
-> ![meme-containerd-and-kubernetes.png](../../../../../Appendix/meme-containerd-and-kubernetes.png)
+> 
 > 
 > The Kubernetes project has made a strategic decision to deprecate Docker as its default container runtime. This decision holds significant implications for both individual users and organizations relying on Kubernetes for container orchestration.
 > 
