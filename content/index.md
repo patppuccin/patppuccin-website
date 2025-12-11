@@ -26,17 +26,27 @@ features:
   - icon: 🗂️
     title: Curations
     details: Notes on books, films, games, and the media I explore.
-    link: /Studio/curations
+    link: /Studio/Curations
 
   - icon: ✒️
     title: Ruminations
     details: Reflections, essays, and thoughts from my day-to-day thinking.
-    link: /Studio/ruminations
+    link: /Studio/Ruminations
+    
+  - icon: 🔬
+    title: Labs
+    details: Experiments, research and challenges I'm exploring.
+    link: /Workshop/Projects
   
   - icon: 🛠️
     title: Projects
     details: Active builds, experiments, and the tools I’m crafting.
-    link: /Workshop/active-projects
+    link: /Workshop/Projects
+    
+  - icon: ✨
+    title: About Me
+    details: A little bit about me, my background, and my journey.
+    link: /about
 
 ---
 

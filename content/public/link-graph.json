@@ -1,6 +1,28 @@
 {
   "backlinks": {
+    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Bash": [
+      "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms"
+    ],
+    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell/PowerShell---Functions": [
+      "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell"
+    ],
+    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/JavaScript": [
+      "/Studio/Expeditions/10-Tech-&-Engineering/09-Infrastructure-&-Cloud/Cloud-Technology"
+    ],
+    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Golang": [
+      "/Studio/Expeditions/10-Tech-&-Engineering/10-DevOps-&-Automation/Terraform"
+    ],
     "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Secure-Shell": [
+      "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Git",
+      "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Secure-Shell"
+    ],
+    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Rust": [
+      "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Git"
+    ],
+    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell": [
+      "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Git"
+    ],
+    "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Git": [
       "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Secure-Shell"
     ]
   },

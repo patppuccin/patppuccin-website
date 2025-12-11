@@ -15,16 +15,16 @@ const navBarConfig = [
   {
     text: "Studio",
     items: [
-      { text: "Expeditions", link: "/studio/Expeditions/" },
-      { text: "Curations", link: "/studio/curations/" },
-      { text: "Ruminations", link: "/studio/ruminations/" },
+      { text: "Expeditions", link: "/Studio/Expeditions/" },
+      { text: "Curations", link: "/Studio/Curations/" },
+      { text: "Ruminations", link: "/Studio/Ruminations/" },
     ],
   },
   {
     text: "Workshop",
     items: [
-      { text: "Labs", link: "/workshop/labs/" },
-      { text: "Projects", link: "/workshop/projects/" },
+      { text: "Labs", link: "/Workshop/Labs/" },
+      { text: "Projects", link: "/Workshop/Projects/" },
     ],
   },
   { text: "Persona", link: "/about" },
@@ -148,7 +148,7 @@ const vitePressConfig = defineConfig({
     socialLinks: socialLinksConfig,
     footer: {
       message: "Made with ❤️ and <a href='https://vitepress.dev'>Vitepress</a>",
-      copyright: `Copyright © ${new Date().getFullYear()} Patrick Ambrose.`,
+      copyright: `Copyright © ${new Date().getFullYear()} <a href="https://patrickambrose.com">Patrick Ambrose</a>.`,
     },
   },
 
