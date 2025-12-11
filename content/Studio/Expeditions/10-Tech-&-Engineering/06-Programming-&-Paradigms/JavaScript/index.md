@@ -334,7 +334,7 @@ Using the HTML DOM, any element in the HTML page can be accessed, edited, delete
 
 An example of how a DOM is constructed is given below
 
-![HTML DOM.png](../../../../../Appendix/HTML-DOM.png)
+![HTML DOM.png](https://patppuccin-assets.r2.cloudflare.com/HTML%20DOM.png)
 
 ## Targeting HTML with DOM
 There are multiple ways of targeting HTML elements using the DOM. Some of the prominent ones are.
