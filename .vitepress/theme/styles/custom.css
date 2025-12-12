@@ -581,3 +581,21 @@
 img {
     border-radius: 1em;
 }
+
+/* HTML Definitions - Custom Styling  */
+
+.definition-term {
+    font-style: normal;
+    border-bottom: 1px dotted var(--vp-c-brand-1);
+    cursor: help;
+    padding-bottom: 1px;
+    transition: color 0.15s ease;
+}
+
+.dark .definition-term {
+    border-bottom-color: var(--vp-c-brand-3);
+}
+
+.definition-term:hover {
+    color: var(--vp-c-brand-2);
+}

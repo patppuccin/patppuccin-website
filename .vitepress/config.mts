@@ -4,8 +4,10 @@ import {
   groupIconVitePlugin,
 } from "vitepress-plugin-group-icons";
 import { withSidebar } from "vitepress-sidebar";
-import { generateLinkGraph } from "./utils/generateGraph.ts";
 import { resolve } from "node:path";
+import marrkdownItDefn from "./plugins/markdownDefinitions.ts";
+import { generateLinkGraph } from "./utils/generateGraph.ts";
+import { generateDefinitions } from "./utils/generateDefinitions.ts";
 
 const srcDirConfig = "content";
 const R2_BASE = process.env.R2_BASE_URL || "https://cdn.patppuccin.calm";
@@ -156,6 +158,7 @@ const vitePressConfig = defineConfig({
     theme: { light: "rose-pine-dawn", dark: "kanagawa-wave" },
     config(md) {
       md.use(groupIconMdPlugin);
+      md.use(marrkdownItDefn);
     },
   },
 
@@ -187,6 +190,7 @@ const vitePressConfig = defineConfig({
 const srcDir = vitePressConfig.srcDir ?? "content";
 const srcPath = resolve(process.cwd(), srcDir);
 generateLinkGraph(srcPath);
+generateDefinitions(srcPath);
 
 // Export Config for VitePress
 export default defineConfig(withSidebar(vitePressConfig, sidebarConfig));

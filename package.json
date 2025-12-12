@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@types/node": "^24.10.2",
+    "markdown-it": "^14.1.0",
     "vitepress-plugin-group-icons": "^1.6.5"
   },
   "devDependencies": {

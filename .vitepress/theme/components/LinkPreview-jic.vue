@@ -13,29 +13,14 @@
                     @mouseleave="handlePreviewLeave"
                 >
                     <div class="preview-content">
-                        <h3 class="preview-title">
-                            {{ previewData.title }}
-                        </h3>
-
-                        <!-- Alias pills -->
-                        <div
-                            v-if="previewData.aliases?.length"
-                            class="aliases-container"
-                        >
-                            <span
-                                class="alias-pill"
-                                v-for="a in previewData.aliases"
-                                :key="a"
-                            >
-                                {{ a }}
-                            </span>
-                        </div>
+                        <h3 class="preview-title">{{ previewData.title }}</h3>
 
                         <p
-                            v-if="previewData.content"
+                            v-if="previewData.description"
                             class="preview-description"
-                            v-html="previewData.content"
-                        ></p>
+                        >
+                            {{ previewData.description }}
+                        </p>
                     </div>
                 </div>
             </Transition>
@@ -45,8 +30,9 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
-import { useData } from "vitepress";
+import { useData, useRouter } from "vitepress";
 
+const router = useRouter();
 const { page } = useData();
 
 const showPreview = ref(false);
@@ -56,42 +42,9 @@ const position = ref({ x: 0, y: 0 });
 
 let hoverTimeout = null;
 let contentRoot = null;
-let definitions = null;
 
-// Load definitions.json once
-const loadDefinitions = async () => {
-    if (definitions) return definitions;
-
-    try {
-        const res = await fetch("/definitions.json");
-        definitions = await res.json();
-    } catch {
-        definitions = {};
-    }
-
-    return definitions;
-};
-
-// Resolve either canonical term or alias
-const resolveDefinition = (term, defs) => {
-    const clean = term.trim().toLowerCase();
-
-    // direct hit
-    if (defs[term]) return { key: term, entry: defs[term] };
-
-    // alias hit
-    for (const key in defs) {
-        const entry = defs[key];
-        if (entry.aliases?.some((a) => a.toLowerCase() === clean)) {
-            return { key, entry };
-        }
-    }
-
-    return null;
-};
-
-// Find VitePress content root
 const findContentRoot = () => {
+    // VitePress doc content appears in one of these depending on theme version
     return (
         document.querySelector(".vp-doc") ||
         document.querySelector(".vp-content") ||
@@ -99,7 +52,6 @@ const findContentRoot = () => {
     );
 };
 
-// Popup positioning
 const calculatePosition = (el) => {
     const rect = el.getBoundingClientRect();
     const previewWidth = 320;
@@ -119,7 +71,6 @@ const calculatePosition = (el) => {
     return { x, y };
 };
 
-// Page preview fetcher (unchanged)
 const fetchPageData = async (href) => {
     try {
         let base = href.replace(/\.md$/, "");
@@ -148,9 +99,6 @@ const fetchPageData = async (href) => {
     }
 };
 
-// -----------------------------
-//  LINK HOVER HANDLERS (unchanged behavior)
-// -----------------------------
 const handleLinkHover = (e) => {
     if (!contentRoot || !contentRoot.contains(e.target)) return;
 
@@ -165,11 +113,7 @@ const handleLinkHover = (e) => {
     hoverTimeout = setTimeout(async () => {
         const data = await fetchPageData(href);
         if (data) {
-            previewData.value = {
-                title: data.title,
-                content: data.description,
-                aliases: [], // not applicable to pages
-            };
+            previewData.value = data;
             position.value = calculatePosition(link);
             showPreview.value = true;
         }
@@ -178,48 +122,11 @@ const handleLinkHover = (e) => {
 
 const handleLinkLeave = () => {
     clearTimeout(hoverTimeout);
-    hoverTimeout = setTimeout(() => (showPreview.value = false), 200);
-};
-
-// -----------------------------
-//  DEFINITION HOVER HANDLERS
-// -----------------------------
-const handleDefinitionHover = async (e) => {
-    if (!contentRoot || !contentRoot.contains(e.target)) return;
-
-    const termEl = e.target.closest(".definition-term");
-    if (!termEl) return;
-
-    const rawTerm = termEl.dataset.term;
-    if (!rawTerm) return;
-
-    clearTimeout(hoverTimeout);
-
-    hoverTimeout = setTimeout(async () => {
-        const defs = await loadDefinitions();
-        const resolved = resolveDefinition(rawTerm, defs);
-
-        if (!resolved) return;
-
-        const { key, entry } = resolved;
-
-        previewData.value = {
-            title: key,
-            content: entry.content || "",
-            aliases: entry.aliases || [],
-        };
-
-        position.value = calculatePosition(termEl);
-        showPreview.value = true;
+    hoverTimeout = setTimeout(() => {
+        showPreview.value = false;
     }, 200);
 };
 
-const handleDefinitionLeave = () => {
-    clearTimeout(hoverTimeout);
-    hoverTimeout = setTimeout(() => (showPreview.value = false), 150);
-};
-
-// -----------------------------
 const attachListeners = () => {
     detachListeners();
 
@@ -228,26 +135,25 @@ const attachListeners = () => {
 
     contentRoot.addEventListener("mouseover", handleLinkHover);
     contentRoot.addEventListener("mouseout", handleLinkLeave);
-
-    contentRoot.addEventListener("mouseover", handleDefinitionHover);
-    contentRoot.addEventListener("mouseout", handleDefinitionLeave);
 };
 
 const detachListeners = () => {
     if (!contentRoot) return;
-
     contentRoot.removeEventListener("mouseover", handleLinkHover);
     contentRoot.removeEventListener("mouseout", handleLinkLeave);
-
-    contentRoot.removeEventListener("mouseover", handleDefinitionHover);
-    contentRoot.removeEventListener("mouseout", handleDefinitionLeave);
 };
 
-onMounted(() => setTimeout(attachListeners, 50));
+onMounted(() => {
+    // Initial attach
+    setTimeout(attachListeners, 50); // allow DOM to settle
+});
 
+// Re-attach whenever route changes
 watch(
     () => page.value.relativePath,
-    () => setTimeout(attachListeners, 50),
+    () => {
+        setTimeout(attachListeners, 50);
+    },
 );
 
 onBeforeUnmount(() => {
@@ -261,6 +167,7 @@ onBeforeUnmount(() => {
     position: relative;
 }
 
+/* popup */
 .link-preview-popup {
     position: fixed;
     z-index: 9999;
@@ -277,35 +184,18 @@ onBeforeUnmount(() => {
     padding: 16px;
 }
 
-/* title */
+/* text */
 .preview-title {
     font-size: 18px;
     font-weight: 600;
     color: var(--vp-c-text-1);
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
 }
 
-/* alias pills */
-.aliases-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-
-.alias-pill {
-    background: var(--vp-c-default-soft);
-    color: var(--vp-c-text-2);
-    border-radius: 6px;
-    padding: 2px 8px;
-    font-size: 12px;
-    border: 1px solid var(--vp-c-divider-light);
-    white-space: nowrap;
-}
-
-/* description */
 .preview-description {
     font-size: 14px;
+    font-weight: 500;
     color: var(--vp-c-text-2);
     margin: 0;
     line-height: 1.6;
@@ -318,6 +208,7 @@ onBeforeUnmount(() => {
         opacity 0.2s var(--vp-t-easing),
         transform 0.2s var(--vp-t-easing);
 }
+
 .preview-fade-enter-from,
 .preview-fade-leave-to {
     opacity: 0;
