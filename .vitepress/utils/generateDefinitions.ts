@@ -18,6 +18,12 @@ const md = new MarkdownIt({
 // -------------------------------
 // CONFIG
 // -------------------------------
+const ALLOWED_FILE_NAME_PREFIXES = [
+  "definitions",
+  "glossary",
+  "terms",
+  "concepts",
+];
 const ALLOWED_TAGS = new Set([
   "p",
   "strong",
@@ -29,13 +35,20 @@ const ALLOWED_TAGS = new Set([
   "hr",
 ]);
 const MAX_LENGTH = 400;
+const READ_MORE_PATTERN = /^read more:\s*\[([^\]]+)\]\(([^)]+)\)\s*$/im;
 
 // -------------------------------
 // TYPES
 // -------------------------------
+interface ReadMoreLink {
+  text: string;
+  url: string;
+}
+
 interface Definition {
   aliases: string[];
   content: string;
+  readMoreLink?: ReadMoreLink;
 }
 
 interface ValidationWarnings {
@@ -43,6 +56,8 @@ interface ValidationWarnings {
   tooLong: string[];
   duplicates: string[];
   aliasConflicts: Array<{ alias: string; conflictsWith: string }>;
+  invalidReadMoreUrls: Array<{ term: string; url: string }>;
+  multipleReadMore: string[];
 }
 
 // -------------------------------
@@ -57,7 +72,7 @@ export function generateDefinitions(srcPath: string): void {
 
   // Validate input directory
   if (!existsSync(contentDir)) {
-    console.error(`🔴 Content directory missing: ${contentDir}`);
+    console.error(` 🔴 Content directory missing: ${contentDir}`);
     return;
   }
 
@@ -70,12 +85,11 @@ export function generateDefinitions(srcPath: string): void {
   const mdFiles = getDefinitionFiles(contentDir);
 
   if (mdFiles.length === 0) {
-    console.log("⏩ No definition files found, skipping.");
+    console.log(" ⏩ No definition files found, skipping.");
     return;
   }
 
-  console.log(`⭐ Found ${mdFiles.length} definition file(s)`);
-  console.log("🔍 Extracting definitions...");
+  console.log(` 🔍 Found ${mdFiles.length} definition file(s), extracting...`);
 
   const definitions: Record<string, Definition> = {};
   const warnings: ValidationWarnings = {
@@ -83,6 +97,8 @@ export function generateDefinitions(srcPath: string): void {
     tooLong: [],
     duplicates: [],
     aliasConflicts: [],
+    invalidReadMoreUrls: [],
+    multipleReadMore: [],
   };
 
   // Process each file
@@ -116,7 +132,7 @@ function getDefinitionFiles(dir: string): string[] {
         walk(fullPath);
       } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".md")) {
         const baseName = entry.name.toLowerCase();
-        if (baseName.startsWith("definitions")) {
+        if (ALLOWED_FILE_NAME_PREFIXES.some((p) => baseName.startsWith(p))) {
           files.push(fullPath);
         }
       }
@@ -141,8 +157,8 @@ function processDefinitionFile(
   const normalized = content.replace(/\r\n/g, "\n");
 
   // Extract definition blocks
-  // Matches: ###### Term (aliases)\n content \n (until next ###### or --- or EOF)
-  const regex = /^######\s+(.+?)\s*\n([\s\S]*?)(?=^######\s+|^---\s*$|\n*$)/gm;
+  // Match everything from ###### heading until the next ###### or --- separator or end
+  const regex = /^######\s+(.+?)\s*\n([\s\S]*?)(?=^######\s+|\Z)/gm;
   const matches = [...normalized.matchAll(regex)];
 
   for (const match of matches) {
@@ -162,11 +178,26 @@ function processDefinitionFile(
     // Check for duplicates
     if (definitions[canonical]) {
       warnings.duplicates.push(canonical);
-      continue; // Skip duplicate, keep first occurrence
+      continue;
+    }
+
+    // Extract "Read More:" link if present
+    const { content: cleanedBody, readMoreLink } = extractReadMore(
+      body,
+      canonical,
+      warnings,
+    );
+
+    // Debug: Show raw body for first term
+    if (canonical === "Authentication") {
+      console.log("\n🔍 Debug - Raw body for Authentication:");
+      console.log(`"${body}"`);
+      console.log("\n🔍 Body length:", body.length);
+      console.log("🔍 Contains 'Read More':", body.includes("Read More"));
     }
 
     // Render markdown to HTML
-    const rendered = md.render(body);
+    const rendered = md.render(cleanedBody);
 
     // Validate HTML tags
     const hasUnsupportedTags = detectUnsupportedTags(rendered);
@@ -181,10 +212,16 @@ function processDefinitionFile(
     }
 
     // Store definition
-    definitions[canonical] = {
+    const definition: Definition = {
       aliases: aliases,
       content: truncateHTML(rendered, MAX_LENGTH),
     };
+
+    if (readMoreLink) {
+      definition.readMoreLink = readMoreLink;
+    }
+
+    definitions[canonical] = definition;
   }
 }
 
@@ -192,7 +229,6 @@ function processDefinitionFile(
 // PARSING HELPERS
 // -------------------------------
 function parseHeading(heading: string): { term: string; aliases: string[] } {
-  // Match the last parentheses group
   const aliasMatch = heading.match(/\(([^)]+)\)\s*$/);
 
   if (!aliasMatch) {
@@ -208,6 +244,98 @@ function parseHeading(heading: string): { term: string; aliases: string[] } {
   const canonical = heading.replace(/\([^)]+\)\s*$/, "").trim();
 
   return { term: canonical, aliases };
+}
+
+function extractReadMore(
+  body: string,
+  term: string,
+  warnings: ValidationWarnings,
+): { content: string; readMoreLink?: ReadMoreLink } {
+  // Split body into lines
+  const lines = body.split("\n");
+
+  // Debug: Log lines for the first term to see what we're working with
+  if (term === "Authentication") {
+    console.log("\n🔍 Debug - Authentication body lines:");
+    lines.forEach((line, i) => {
+      console.log(`   Line ${i}: "${line}"`);
+      console.log(`   Matches pattern: ${READ_MORE_PATTERN.test(line)}`);
+    });
+  }
+
+  // Find all "Read More:" lines
+  const readMoreLines: number[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (READ_MORE_PATTERN.test(lines[i])) {
+      readMoreLines.push(i);
+    }
+  }
+
+  // No "Read More:" found
+  if (readMoreLines.length === 0) {
+    return { content: body };
+  }
+
+  // Multiple "Read More:" found - warn and use last one
+  if (readMoreLines.length > 1) {
+    warnings.multipleReadMore.push(term);
+  }
+
+  // Get the last "Read More:" line
+  const lastReadMoreIndex = readMoreLines[readMoreLines.length - 1];
+  const readMoreLine = lines[lastReadMoreIndex];
+
+  // Extract link from "Read More:" line
+  const match = readMoreLine.match(READ_MORE_PATTERN);
+
+  if (!match) {
+    // This shouldn't happen due to the test above, but safety check
+    return { content: body };
+  }
+
+  const linkText = match[1].trim();
+  const linkUrl = match[2].trim();
+
+  // Validate URL
+  const isValidUrl = validateReadMoreUrl(linkUrl);
+  if (!isValidUrl) {
+    warnings.invalidReadMoreUrls.push({ term, url: linkUrl });
+    // Invalid URL - remove "Read More:" line but don't include link
+    const contentLines = lines.slice(0, lastReadMoreIndex);
+    return { content: contentLines.join("\n").trim() };
+  }
+
+  // Valid URL - extract and remove "Read More:" section
+  const contentLines = lines.slice(0, lastReadMoreIndex);
+  const cleanedContent = contentLines.join("\n").trim();
+
+  return {
+    content: cleanedContent,
+    readMoreLink: {
+      text: linkText,
+      url: linkUrl,
+    },
+  };
+}
+
+function validateReadMoreUrl(url: string): boolean {
+  // Allow internal links starting with /
+  if (url.startsWith("/")) {
+    return true;
+  }
+
+  // Allow relative paths (./ and ../)
+  if (url.startsWith("./") || url.startsWith("../")) {
+    return true;
+  }
+
+  // Allow http and https URLs
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return true;
+  }
+
+  // Reject javascript:, data:, and other dangerous protocols
+  return false;
 }
 
 // -------------------------------
@@ -235,7 +363,6 @@ function validateAliasConflicts(
 
   for (const [term, def] of Object.entries(definitions)) {
     for (const alias of def.aliases) {
-      // Check if alias conflicts with another canonical term
       if (allTerms.has(alias) && alias !== term) {
         warnings.aliasConflicts.push({
           alias,
@@ -254,7 +381,6 @@ function truncateHTML(html: string, maxLength: number): string {
     return html;
   }
 
-  // Simple truncation with tag awareness
   let truncated = html.slice(0, maxLength);
 
   // Find last complete tag before cutoff
@@ -278,9 +404,13 @@ function printSummary(
   warnings: ValidationWarnings,
 ): void {
   const totalEntries = Object.keys(definitions).length;
+  const withReadMore = Object.values(definitions).filter(
+    (d) => d.readMoreLink,
+  ).length;
 
   console.log(`\n✅ Definitions generated at ${outputPath}`);
-  console.log(`   ├─ 📄 Entries: ${totalEntries}`);
+  console.log(`   ├─ 📄 Total entries: ${totalEntries}`);
+  console.log(`   ├─ 🔗 With "Read More": ${withReadMore}`);
   console.log(`   ╰─ 📁 Output: public/definitions.json`);
 
   // Print warnings
@@ -289,6 +419,23 @@ function printSummary(
     warnings.duplicates.forEach((term, i) => {
       const prefix = i === warnings.duplicates.length - 1 ? "╰─" : "├─";
       console.log(`   ${prefix} 📄 ${term}`);
+    });
+  }
+
+  if (warnings.multipleReadMore.length > 0) {
+    console.log('\n⚠️  Multiple "Read More:" found (using last occurrence):');
+    warnings.multipleReadMore.forEach((term, i) => {
+      const prefix = i === warnings.multipleReadMore.length - 1 ? "╰─" : "├─";
+      console.log(`   ${prefix} 📄 ${term}`);
+    });
+  }
+
+  if (warnings.invalidReadMoreUrls.length > 0) {
+    console.log('\n⚠️  Invalid "Read More:" URLs (link removed):');
+    warnings.invalidReadMoreUrls.forEach((item, i) => {
+      const prefix =
+        i === warnings.invalidReadMoreUrls.length - 1 ? "╰─" : "├─";
+      console.log(`   ${prefix} 📄 ${item.term} → ${item.url}`);
     });
   }
 
@@ -320,6 +467,8 @@ function printSummary(
 
   if (
     warnings.duplicates.length === 0 &&
+    warnings.multipleReadMore.length === 0 &&
+    warnings.invalidReadMoreUrls.length === 0 &&
     warnings.unsupportedTags.length === 0 &&
     warnings.tooLong.length === 0 &&
     warnings.aliasConflicts.length === 0

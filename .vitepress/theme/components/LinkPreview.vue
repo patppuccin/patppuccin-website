@@ -9,15 +9,15 @@
                     ref="previewRef"
                     class="link-preview-popup"
                     :style="{ left: `${position.x}px`, top: `${position.y}px` }"
-                    @mouseenter="handlePreviewEnter"
-                    @mouseleave="handlePreviewLeave"
+                    @mouseenter="handlePopupEnter"
+                    @mouseleave="handlePopupLeave"
                 >
                     <div class="preview-content">
                         <h3 class="preview-title">
                             {{ previewData.title }}
                         </h3>
 
-                        <!-- Alias pills -->
+                        <!-- Alias pills (definitions only) -->
                         <div
                             v-if="previewData.aliases?.length"
                             class="aliases-container"
@@ -31,11 +31,22 @@
                             </span>
                         </div>
 
+                        <!-- Description -->
                         <p
                             v-if="previewData.content"
                             class="preview-description"
                             v-html="previewData.content"
                         ></p>
+
+                        <!-- Read more (definitions only) -->
+                        <div v-if="previewData.readMore" class="read-more">
+                            <a
+                                :href="previewData.readMore.url"
+                                class="read-more-link"
+                            >
+                                Read more →
+                            </a>
+                        </div>
                     </div>
                 </div>
             </Transition>
@@ -49,16 +60,24 @@ import { useData } from "vitepress";
 
 const { page } = useData();
 
+// -----------------------------
+// State
+// -----------------------------
 const showPreview = ref(false);
 const previewData = ref(null);
 const previewRef = ref(null);
 const position = ref({ x: 0, y: 0 });
 
+const isHoveringAnchor = ref(false);
+const isHoveringPopup = ref(false);
+
 let hoverTimeout = null;
 let contentRoot = null;
 let definitions = null;
 
-// Load definitions.json once
+// -----------------------------
+// Definitions loading
+// -----------------------------
 const loadDefinitions = async () => {
     if (definitions) return definitions;
 
@@ -72,14 +91,11 @@ const loadDefinitions = async () => {
     return definitions;
 };
 
-// Resolve either canonical term or alias
 const resolveDefinition = (term, defs) => {
     const clean = term.trim().toLowerCase();
 
-    // direct hit
     if (defs[term]) return { key: term, entry: defs[term] };
 
-    // alias hit
     for (const key in defs) {
         const entry = defs[key];
         if (entry.aliases?.some((a) => a.toLowerCase() === clean)) {
@@ -90,16 +106,14 @@ const resolveDefinition = (term, defs) => {
     return null;
 };
 
-// Find VitePress content root
-const findContentRoot = () => {
-    return (
-        document.querySelector(".vp-doc") ||
-        document.querySelector(".vp-content") ||
-        null
-    );
-};
+// -----------------------------
+// DOM helpers
+// -----------------------------
+const findContentRoot = () =>
+    document.querySelector(".vp-doc") ||
+    document.querySelector(".vp-content") ||
+    null;
 
-// Popup positioning
 const calculatePosition = (el) => {
     const rect = el.getBoundingClientRect();
     const previewWidth = 320;
@@ -119,7 +133,34 @@ const calculatePosition = (el) => {
     return { x, y };
 };
 
-// Page preview fetcher (unchanged)
+// -----------------------------
+// Hide scheduling (shared)
+// -----------------------------
+const scheduleHide = () => {
+    clearTimeout(hoverTimeout);
+    hoverTimeout = setTimeout(() => {
+        if (!isHoveringAnchor.value && !isHoveringPopup.value) {
+            showPreview.value = false;
+        }
+    }, 150);
+};
+
+// -----------------------------
+// Popup hover handlers
+// -----------------------------
+const handlePopupEnter = () => {
+    isHoveringPopup.value = true;
+    clearTimeout(hoverTimeout);
+};
+
+const handlePopupLeave = () => {
+    isHoveringPopup.value = false;
+    scheduleHide();
+};
+
+// -----------------------------
+// Page link hover handlers
+// -----------------------------
 const fetchPageData = async (href) => {
     try {
         let base = href.replace(/\.md$/, "");
@@ -132,7 +173,7 @@ const fetchPageData = async (href) => {
         const html = await res.text();
         const doc = new DOMParser().parseFromString(html, "text/html");
 
-        let title =
+        const title =
             doc.querySelector("title")?.textContent.split("|")[0].trim() ||
             doc.querySelector("h1")?.textContent?.trim() ||
             "";
@@ -148,9 +189,6 @@ const fetchPageData = async (href) => {
     }
 };
 
-// -----------------------------
-//  LINK HOVER HANDLERS (unchanged behavior)
-// -----------------------------
 const handleLinkHover = (e) => {
     if (!contentRoot || !contentRoot.contains(e.target)) return;
 
@@ -160,29 +198,32 @@ const handleLinkHover = (e) => {
     const href = link.getAttribute("href");
     if (!href || href.startsWith("http") || href.startsWith("#")) return;
 
+    isHoveringAnchor.value = true;
     clearTimeout(hoverTimeout);
 
     hoverTimeout = setTimeout(async () => {
         const data = await fetchPageData(href);
-        if (data) {
-            previewData.value = {
-                title: data.title,
-                content: data.description,
-                aliases: [], // not applicable to pages
-            };
-            position.value = calculatePosition(link);
-            showPreview.value = true;
-        }
+        if (!data) return;
+
+        previewData.value = {
+            title: data.title,
+            content: data.description,
+            aliases: [],
+            readMore: null,
+        };
+
+        position.value = calculatePosition(link);
+        showPreview.value = true;
     }, 300);
 };
 
 const handleLinkLeave = () => {
-    clearTimeout(hoverTimeout);
-    hoverTimeout = setTimeout(() => (showPreview.value = false), 200);
+    isHoveringAnchor.value = false;
+    scheduleHide();
 };
 
 // -----------------------------
-//  DEFINITION HOVER HANDLERS
+// Definition hover handlers
 // -----------------------------
 const handleDefinitionHover = async (e) => {
     if (!contentRoot || !contentRoot.contains(e.target)) return;
@@ -193,12 +234,12 @@ const handleDefinitionHover = async (e) => {
     const rawTerm = termEl.dataset.term;
     if (!rawTerm) return;
 
+    isHoveringAnchor.value = true;
     clearTimeout(hoverTimeout);
 
     hoverTimeout = setTimeout(async () => {
         const defs = await loadDefinitions();
         const resolved = resolveDefinition(rawTerm, defs);
-
         if (!resolved) return;
 
         const { key, entry } = resolved;
@@ -207,6 +248,7 @@ const handleDefinitionHover = async (e) => {
             title: key,
             content: entry.content || "",
             aliases: entry.aliases || [],
+            readMore: entry.readMoreLink || null,
         };
 
         position.value = calculatePosition(termEl);
@@ -215,10 +257,12 @@ const handleDefinitionHover = async (e) => {
 };
 
 const handleDefinitionLeave = () => {
-    clearTimeout(hoverTimeout);
-    hoverTimeout = setTimeout(() => (showPreview.value = false), 150);
+    isHoveringAnchor.value = false;
+    scheduleHide();
 };
 
+// -----------------------------
+// Listener wiring
 // -----------------------------
 const attachListeners = () => {
     detachListeners();
@@ -243,6 +287,7 @@ const detachListeners = () => {
     contentRoot.removeEventListener("mouseout", handleDefinitionLeave);
 };
 
+// -----------------------------
 onMounted(() => setTimeout(attachListeners, 50));
 
 watch(
@@ -257,18 +302,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.link-preview-container {
-    position: relative;
-}
-
 .link-preview-popup {
     position: fixed;
     z-index: 9999;
     width: 320px;
     pointer-events: auto;
+    padding: 6px;
 }
 
-/* card */
 .preview-content {
     background-color: var(--vp-c-bg-soft);
     border-radius: 8px;
@@ -277,15 +318,12 @@ onBeforeUnmount(() => {
     padding: 16px;
 }
 
-/* title */
 .preview-title {
     font-size: 18px;
     font-weight: 600;
-    color: var(--vp-c-text-1);
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
 }
 
-/* alias pills */
 .aliases-container {
     display: flex;
     flex-wrap: wrap;
@@ -295,36 +333,43 @@ onBeforeUnmount(() => {
 
 .alias-pill {
     background: var(--vp-c-default-soft);
-    color: var(--vp-c-text-2);
     border-radius: 6px;
     padding: 2px 8px;
     font-size: 12px;
     border: 1px solid var(--vp-c-divider-light);
-    white-space: nowrap;
 }
 
-/* description */
 .preview-description {
     font-size: 14px;
-    color: var(--vp-c-text-2);
-    margin: 0;
     line-height: 1.6;
+    margin: 0;
 }
 
-/* fade transition */
+.read-more {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.read-more-link {
+    font-size: 13px;
+    color: var(--vp-c-brand);
+    text-decoration: none;
+}
+
+.read-more-link:hover {
+    text-decoration: underline;
+}
+
 .preview-fade-enter-active,
 .preview-fade-leave-active {
     transition:
         opacity 0.2s var(--vp-t-easing),
         transform 0.2s var(--vp-t-easing);
 }
+
 .preview-fade-enter-from,
 .preview-fade-leave-to {
     opacity: 0;
     transform: translateY(-4px);
-}
-
-.dark .preview-content {
-    box-shadow: var(--vp-shadow-4);
 }
 </style>
