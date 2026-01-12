@@ -1,31 +1,44 @@
 // https://vitepress.dev/guide/custom-theme
 import { h } from "vue";
 import type { Theme } from "vitepress";
+import { useData } from "vitepress";
 import DefaultTheme from "vitepress/theme";
 import "./styles/custom.css";
 import "virtual:group-icons.css";
 
-import CopyMarkdown from "./components/CopyMarkdown.vue";
+import DocHeader from "./partials/DocHeader.vue";
+import DocFooter from "./partials/DocFooter.vue";
+import DefinitionsPreview from "./components/DefinitionsPreview.vue";
 import ContactForm from "./components/ContactForm.vue";
-import Backlinks from "./components/Backlinks.vue";
-import LinkPreview from "./components/LinkPreview.vue";
+import BlogIndex from "./components/BlogIndex.vue";
 
 export default {
   extends: DefaultTheme,
   Layout: () => {
-    return h(LinkPreview, null, {
-      default: () =>
-        h(DefaultTheme.Layout, null, {
-          "doc-before": () => h(CopyMarkdown),
-          "doc-footer-before": () => h(Backlinks),
-        }),
+    return h(DefaultTheme.Layout, null, {
+      "doc-before": () => h(DocHeader),
+      "doc-footer-before": () => h(DocFooter),
+      "layout-bottom": () => h(DefinitionsPreview),
     });
   },
   enhanceApp({ app, router, siteData }) {
-    // ...
-    app.component("CopyMarkdown", CopyMarkdown);
+    app.component("BlogIndex", BlogIndex);
     app.component("ContactForm", ContactForm);
-    app.component("Backlinks", Backlinks);
-    app.component("LinkPreview", LinkPreview); // Optional: register globally
   },
 } satisfies Theme;
+
+// export default {
+//   extends: DefaultTheme,
+//   Layout: () => {
+//     return h(LinkPreview, null, {
+//       default: () =>
+//         h(DefaultTheme.Layout, null, {
+//           "doc-before": () => h(DocHeader),
+//           "doc-footer-before": () => h(DocFooter),
+//         }),
+//     });
+//   },
+//   enhanceApp({ app, router, siteData }) {
+//     app.component("ContactForm", ContactForm);
+//   },
+// } satisfies Theme;

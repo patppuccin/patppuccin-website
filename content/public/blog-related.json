@@ -1,0 +1,26 @@
+{
+  "Introduction-to-HLS": {
+    "related": [
+      {
+        "url": "/Ruminations/Something-Nu",
+        "title": "Something Nu",
+        "author": "Patrick Ambrose",
+        "date": "2026-01-12T02:35:11.555Z",
+        "cover": null,
+        "excerpt": "Exploring Nushell, the object-based shell built with Rust, that is blazing fast and offers a lot of cherries on top."
+      }
+    ]
+  },
+  "Something-Nu": {
+    "related": [
+      {
+        "url": "/Ruminations/Introduction-to-HLS",
+        "title": "Introduction to HLS",
+        "author": "Patrick Ambrose",
+        "date": "2026-01-12T02:35:11.555Z",
+        "cover": "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1600&h=900&fit=crop&auto=format&q=80",
+        "excerpt": "A brief introduction to HTTP Live Streaming."
+      }
+    ]
+  }
+}

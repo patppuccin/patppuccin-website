@@ -5,62 +5,56 @@ import {
 } from "vitepress-plugin-group-icons";
 import { withSidebar } from "vitepress-sidebar";
 import { resolve } from "node:path";
-import marrkdownItDefn from "./plugins/markdownDefinitions.ts";
-import { generateLinkGraph } from "./utils/generateGraph.ts";
-import { generateDefinitions } from "./utils/generateDefinitions.ts";
+import parseDefinitions from "./utils/mdDefinitions.ts";
+import { generateMeta } from "./utils/generateMeta.ts";
 
 const srcDirConfig = "content";
-const R2_BASE = process.env.R2_BASE_URL || "https://cdn.patppuccin.calm";
+const R2_BASE = process.env.R2_BASE_URL || "https://cdn.patppuccin.com";
 const ATTACHMENTS_BASE = /\(\/Appendix\/([^)\s]+)\)/g;
 
 const navBarConfig = [
-  {
-    text: "Studio",
-    items: [
-      { text: "Expeditions", link: "/Studio/Expeditions/" },
-      { text: "Curations", link: "/Studio/Curations/" },
-      { text: "Ruminations", link: "/Studio/Ruminations/" },
-    ],
-  },
-  {
-    text: "Workshop",
-    items: [
-      { text: "Labs", link: "/Workshop/Labs/" },
-      { text: "Projects", link: "/Workshop/Projects/" },
-    ],
-  },
-  { text: "Persona", link: "/about" },
+  { text: "Atlas", link: "/Atlas/" },
+  { text: "Expeditions", link: "/Expeditions/" },
+  { text: "Ruminations", link: "/Ruminations/" },
+  { text: "Workshop", link: "/Workshop/" },
 ];
 
 const socialLinksConfig = [
-  {
-    icon: "gmail",
-    link: "mailto:hey@patrickambrose.com",
-    ariaLabel: "Email",
-  },
-  {
-    icon: "github",
-    link: "https://github.com/patppuccin",
-    ariaLabel: "GitHub",
-  },
   {
     icon: "linkedin",
     link: "https://www.linkedin.com/in/pat-ambrose",
     ariaLabel: "LinkedIn",
   },
   {
-    icon: "googleearth",
-    link: "https://www.patrickambrose.com",
-    ariaLabel: "Website",
+    icon: "github",
+    link: "https://github.com/patppuccin",
+    ariaLabel: "GitHub",
   },
 ];
 
 const sidebarConfig = [
   {
     documentRootPath: "content",
-    scanStartPath: "Studio/Expeditions",
-    basePath: "/Studio/Expeditions/",
-    resolvePath: "/Studio/Expeditions/",
+    scanStartPath: "Expeditions",
+    basePath: "/Expeditions/",
+    resolvePath: "/Expeditions/",
+    useTitleFromFrontmatter: true,
+    collapsed: true,
+    collapseDepth: 1,
+    sortMenusByName: false,
+    sortMenusByFrontmatterOrder: true,
+    useFolderTitleFromIndexFile: true,
+    useFolderLinkFromIndexFile: true,
+    includeFolderIndexFile: false,
+    hyphenToSpace: true,
+    excludeByFolderDepth: 4,
+    excludeFilesByFrontmatterFieldName: "exclude",
+  },
+  {
+    documentRootPath: "content",
+    scanStartPath: "Ruminations",
+    basePath: "/Ruminations/",
+    resolvePath: "/Ruminations/",
     useTitleFromFrontmatter: true,
     collapsed: true,
     collapseDepth: 1,
@@ -73,39 +67,9 @@ const sidebarConfig = [
   },
   {
     documentRootPath: "content",
-    scanStartPath: "Studio/Curations",
-    basePath: "/Studio/Curations/",
-    resolvePath: "/Studio/Curations/",
-    useTitleFromFrontmatter: true,
-    collapsed: true,
-    collapseDepth: 1,
-    sortMenusByName: false,
-    sortMenusByFrontmatterOrder: true,
-    useFolderTitleFromIndexFile: true,
-    useFolderLinkFromIndexFile: true,
-    includeFolderIndexFile: false,
-    hyphenToSpace: true,
-  },
-  {
-    documentRootPath: "content",
-    scanStartPath: "Workshop/Labs",
-    basePath: "/Workshop/Labs/",
-    resolvePath: "/Workshop/Labs/",
-    useTitleFromFrontmatter: true,
-    collapsed: true,
-    collapseDepth: 1,
-    sortMenusByName: false,
-    sortMenusByFrontmatterOrder: true,
-    useFolderTitleFromIndexFile: true,
-    useFolderLinkFromIndexFile: true,
-    includeFolderIndexFile: false,
-    hyphenToSpace: true,
-  },
-  {
-    documentRootPath: "content",
-    scanStartPath: "Workshop/Projects",
-    basePath: "/Workshop/Projects/",
-    resolvePath: "/Workshop/Projects/",
+    scanStartPath: "Workshop",
+    basePath: "/Workshop/",
+    resolvePath: "/Workshop/",
     useTitleFromFrontmatter: true,
     collapsed: true,
     collapseDepth: 1,
@@ -158,8 +122,22 @@ const vitePressConfig = defineConfig({
     theme: { light: "rose-pine-dawn", dark: "kanagawa-wave" },
     config(md) {
       md.use(groupIconMdPlugin);
-      md.use(marrkdownItDefn);
+      md.use(parseDefinitions);
     },
+  },
+
+  // Auto-apply layout for blog posts
+  async transformPageData(pageData) {
+    const isBlogPost =
+      pageData.relativePath.startsWith("Ruminations/") &&
+      pageData.relativePath !== "Ruminations/index.md";
+
+    if (isBlogPost && !pageData.frontmatter.layout) {
+      pageData.frontmatter.blog = true;
+      if (!pageData.frontmatter.author) {
+        pageData.frontmatter.author = "Patrick Ambrose";
+      }
+    }
   },
 
   vite: {
@@ -177,7 +155,7 @@ const vitePressConfig = defineConfig({
           if (!id.endsWith(".md")) return;
           const rewritten = code.replace(
             ATTACHMENTS_BASE,
-            (_match, filename) => `(${R2_BASE}/${filename})`,
+            (_match, filename) => `(${R2_BASE}/${filename})`
           );
           return rewritten;
         },
@@ -189,8 +167,9 @@ const vitePressConfig = defineConfig({
 // Generate Link-Graph for Backlinks
 const srcDir = vitePressConfig.srcDir ?? "content";
 const srcPath = resolve(process.cwd(), srcDir);
-generateLinkGraph(srcPath);
-generateDefinitions(srcPath);
+generateMeta(srcPath);
+// generateLinkGraph(srcPath);
+// generateDefinitions(srcPath);
 
 // Export Config for VitePress
 export default defineConfig(withSidebar(vitePressConfig, sidebarConfig));

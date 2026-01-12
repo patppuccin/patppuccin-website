@@ -12,7 +12,7 @@ hero:
   actions:
     - theme: brand
       text: Start Exploring
-      link: /Studio/Expeditions
+      link: /Expeditions
     - theme: alt
       text: About Me
       link: /about
@@ -21,33 +21,22 @@ features:
   - icon: 📘
     title: Expeditions
     details: Concepts, learnings, and structured knowledge I’m building.
-    link: /Studio/Expeditions
-
-  - icon: 🗂️
-    title: Curations
-    details: Notes on books, films, games, and the media I explore.
-    link: /Studio/Curations
+    link: /Expeditions/
 
   - icon: ✒️
     title: Ruminations
     details: Reflections, essays, and thoughts from my day-to-day thinking.
-    link: /Studio/Ruminations
-    
-  - icon: 🔬
-    title: Labs
-    details: Experiments, research and challenges I'm exploring.
-    link: /Workshop/Projects
-  
+    link: /Ruminations/
+
   - icon: 🛠️
-    title: Projects
-    details: Active builds, experiments, and the tools I’m crafting.
-    link: /Workshop/Projects
-    
+    title: Workshop
+    details: Experiments, research and challenges I'm exploring.
+    link: /Workshop/
+
   - icon: ✨
     title: About Me
     details: A little bit about me, my background, and my journey.
-    link: /about
-
+    link: /Atlas/
 ---
 
 ## Patppuccin?

@@ -1,88 +1,108 @@
 {
   "backlinks": {
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Bash": [
-      "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms"
+    "/Expeditions/Design/Laws-of-UX": [
+      "/Expeditions/Design/Laws-of-UX"
     ],
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell/PowerShell---Functions": [
-      "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell"
+    "/Expeditions/Infrastructure-&-Ops/Platforms/Docker": [
+      "/Expeditions/Fundamentals/Operating-Systems/Linux",
+      "/Expeditions/Infrastructure-&-Ops/Platforms/Kubernetes",
+      "/Expeditions/Programming/Concepts/Infrastructure-as-Code"
     ],
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/JavaScript": [
-      "/Studio/Expeditions/10-Tech-&-Engineering/09-Infrastructure-&-Cloud/Cloud-Technology"
+    "/Expeditions/Programming/Languages/JavaScript": [
+      "/Expeditions/Infrastructure-&-Ops/Concepts/Cloud-Technology"
     ],
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Golang": [
-      "/Studio/Expeditions/10-Tech-&-Engineering/10-DevOps-&-Automation/Terraform"
+    "/Expeditions/Programming/Languages/Golang": [
+      "/Expeditions/Infrastructure-&-Ops/Platforms/Terraform"
     ],
-    "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Secure-Shell": [
-      "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Git",
-      "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Secure-Shell"
+    "/Expeditions/Programming/Concepts/Virtual-Machines": [
+      "/Expeditions/Programming/Concepts/Virtualization"
     ],
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Rust": [
-      "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Git"
+    "/Expeditions/Programming/Languages/PowerShell/PowerShell---Functions": [
+      "/Expeditions/Programming/Languages/PowerShell"
     ],
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell": [
-      "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Git"
+    "/Expeditions/Programming/Concepts": [
+      "/Expeditions/Programming/Languages/Python/Data-Types-and-Variables"
     ],
-    "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Git": [
-      "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Secure-Shell"
+    "/Expeditions/Tooling-&-Utilities/Secure-Shell": [
+      "/Expeditions/Tooling-&-Utilities/Git",
+      "/Expeditions/Tooling-&-Utilities/Secure-Shell"
+    ],
+    "/Expeditions/Programming/Languages/Rust": [
+      "/Expeditions/Tooling-&-Utilities/Git"
+    ],
+    "/Expeditions/Programming/Languages/PowerShell": [
+      "/Expeditions/Tooling-&-Utilities/Git"
     ]
   },
   "titles": {
-    "/about": "About",
+    "/Atlas": "Atlas",
+    "/Expeditions/Artificial-Intelligence": "Computational Intelligence",
+    "/Expeditions/Data": "Data Systems",
+    "/Expeditions/Design": "Design & Interaction",
+    "/Expeditions/Design/Laws-of-UX": "Laws of UX",
+    "/Expeditions/Fundamentals": "Systems & Architecture",
+    "/Expeditions/Fundamentals/Networking/Computer-Networking": "Computer Networking",
+    "/Expeditions/Fundamentals/Operating-Systems/Linux": "The Linux OS",
+    "/Expeditions": "Expeditions",
+    "/Expeditions/Infrastructure-&-Ops/Concepts/12-Factor-App": "12 Factor App",
+    "/Expeditions/Infrastructure-&-Ops/Concepts/Cloud-Technology": "Cloud Technology",
+    "/Expeditions/Infrastructure-&-Ops": "Infrastructure & Ops",
+    "/Expeditions/Infrastructure-&-Ops/Platforms/AWS/AWSa": "Amazon Web Services",
+    "/Expeditions/Infrastructure-&-Ops/Platforms/AWS": "Amazon Web Services",
+    "/Expeditions/Infrastructure-&-Ops/Platforms/Docker": "Docker",
+    "/Expeditions/Infrastructure-&-Ops/Platforms/Kubernetes": "Kubernetes",
+    "/Expeditions/Infrastructure-&-Ops/Platforms/Terraform": "Terraform",
+    "/Expeditions/Origins/Early-Computation": "Early Computation",
+    "/Expeditions/Origins": "History of Computing",
+    "/Expeditions/Programming/Concepts/Authentication-and-Authorization": "Authentication and Authorization",
+    "/Expeditions/Programming/Concepts/Availability": "Availability",
+    "/Expeditions/Programming/Concepts/Code-Refactoring": "Code Refactoring",
+    "/Expeditions/Programming/Concepts": "Concepts",
+    "/Expeditions/Programming/Concepts/Infrastructure-as-Code": "Infrastructure as Code (IaC)",
+    "/Expeditions/Programming/Concepts/Open-Source": "Free and Open Source (FOSS)",
+    "/Expeditions/Programming/Concepts/Principle-of-Least-Prilivege": "Principle of Least Privilege",
+    "/Expeditions/Programming/Concepts/Variable-Naming-Cases": "Variable Naming Cases",
+    "/Expeditions/Programming/Concepts/Version-Control": "Version Control Systems",
+    "/Expeditions/Programming/Concepts/Virtual-Machines": "Virtual Machines",
+    "/Expeditions/Programming/Concepts/Virtualization": "Virtualization",
+    "/Expeditions/Programming": "Programming",
+    "/Expeditions/Programming/Languages/Bash": "Bash",
+    "/Expeditions/Programming/Languages/Golang": "Golang",
+    "/Expeditions/Programming/Languages": "Languages",
+    "/Expeditions/Programming/Languages/JavaScript": "JavaScript",
+    "/Expeditions/Programming/Languages/PowerShell": "PowerShell",
+    "/Expeditions/Programming/Languages/PowerShell/PowerShell---Error-Handling": "PowerShell - Error Handling",
+    "/Expeditions/Programming/Languages/PowerShell/PowerShell---Flow-Control-and-Loops": "PowerShell   Flow Control And Loops",
+    "/Expeditions/Programming/Languages/PowerShell/PowerShell---Functions": "PowerShell Functions",
+    "/Expeditions/Programming/Languages/PowerShell/PowerShell---Modules": "PowerShell Modules",
+    "/Expeditions/Programming/Languages/PowerShell/PowerShell-Basics": "PowerShell Basics",
+    "/Expeditions/Programming/Languages/Python/Data-Types-and-Variables": "Data Types And Variables",
+    "/Expeditions/Programming/Languages/Python/Flow-Control-and-Loops": "Flow Control And Loops",
+    "/Expeditions/Programming/Languages/Python/Fundamentals": "Fundamentals",
+    "/Expeditions/Programming/Languages/Python/Getting-Started": "Getting Started",
+    "/Expeditions/Programming/Languages/Python": "Python",
+    "/Expeditions/Programming/Languages/Python/Methods-and-Functions": "Methods And Functions",
+    "/Expeditions/Programming/Languages/Python/Operators": "Operators",
+    "/Expeditions/Programming/Languages/Python/Pythons": "Python",
+    "/Expeditions/Programming/Languages/Rust": "Rust Programming Language",
+    "/Expeditions/Programming/Paradigms": "Paradigms",
+    "/Expeditions/Security": "Security Engineering",
+    "/Expeditions/Software-Engineering/Engineering-Teams": "Engineering Teams",
+    "/Expeditions/Software-Engineering": "Software Engineering",
+    "/Expeditions/Software-Engineering/Quality-Assurance": "Quality Assurance",
+    "/Expeditions/Software-Engineering/Reliability-Engineering": "Reliability Engineering",
+    "/Expeditions/Software-Engineering/Requirements-Modeling": "Requirements Modeling",
+    "/Expeditions/Software-Engineering/Software-Evolution": "Software Evolution",
+    "/Expeditions/Software-Engineering/System-Architecture": "System Architecture",
+    "/Expeditions/Tooling-&-Utilities/Git": "Git",
+    "/Expeditions/Tooling-&-Utilities": "Tooling & Utilities",
+    "/Expeditions/Tooling-&-Utilities/Secure-Shell": "Secure Shell (SSH)",
     "/": "Content",
-    "/Studio/Curations/Books/Building-a-Second-Brain": "Building a Second Brain",
-    "/Studio/Curations/Books": "Books",
-    "/Studio/Expeditions/01-Faith-&-Theology/Genesis-1": "Genesis Chapter 1",
-    "/Studio/Expeditions/10-Tech-&-Engineering/01-History-of-Computing": "History of Computing",
-    "/Studio/Expeditions/10-Tech-&-Engineering/02-Fundamentals-of-Computing": "Fundamentals of Computing",
-    "/Studio/Expeditions/10-Tech-&-Engineering/03-Systems-&-Architecture": "Systems & Architecture",
-    "/Studio/Expeditions/10-Tech-&-Engineering/03-Systems-&-Architecture/Linux": "The Linux OS",
-    "/Studio/Expeditions/10-Tech-&-Engineering/04-Hardware-&-Embedded-Systems": "Hardware & Embedded Systems",
-    "/Studio/Expeditions/10-Tech-&-Engineering/05-Networking-&-Internet/Computer-Networking": "Computer Networking",
-    "/Studio/Expeditions/10-Tech-&-Engineering/05-Networking-&-Internet": "Networking & Internet",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Bash": "Bash",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Concepts/Authentication-and-Authorization": "Authentication and Authorization",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Concepts/Infrastructure-as-Code": "Infrastructure as Code (IaC)",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Concepts/Open-Source": "Free and Open Source (FOSS)",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Concepts/Variable-Naming-Cases": "Variable Naming Cases",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Concepts/Version-Control": "Version Control Systems",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Golang": "Golang",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms": "Programming & Paradigms",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/JavaScript": "JavaScript",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell": "PowerShell",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell/PowerShell---Error-Handling": "PowerShell - Error Handling",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell/PowerShell---Flow-Control-and-Loops": "PowerShell   Flow Control And Loops",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell/PowerShell---Functions": "PowerShell Functions",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell/PowerShell---Modules": "PowerShell Modules",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/PowerShell/PowerShell-Basics": "PowerShell Basics",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Python/Data-Types-and-Variables": "Data Types And Variables",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Python/Flow-Control-and-Loops": "Flow Control And Loops",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Python/Fundamentals": "Fundamentals",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Python/Getting-Started": "Getting Started",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Python": "Python",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Python/Methods-and-Functions": "Methods And Functions",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Python/Operators": "Operators",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Python/Pythons": "Python",
-    "/Studio/Expeditions/10-Tech-&-Engineering/06-Programming-&-Paradigms/Rust": "Rust Programming Language",
-    "/Studio/Expeditions/10-Tech-&-Engineering/07-Software-Engineering": "Software Engineering",
-    "/Studio/Expeditions/10-Tech-&-Engineering/08-Application-Development": "Application Development",
-    "/Studio/Expeditions/10-Tech-&-Engineering/09-Infrastructure-&-Cloud/AWS/AWSa": "Amazon Web Services",
-    "/Studio/Expeditions/10-Tech-&-Engineering/09-Infrastructure-&-Cloud/AWS": "Amazon Web Services",
-    "/Studio/Expeditions/10-Tech-&-Engineering/09-Infrastructure-&-Cloud/Cloud-Technology": "Cloud Technology",
-    "/Studio/Expeditions/10-Tech-&-Engineering/09-Infrastructure-&-Cloud": "Infrastructure & Cloud",
-    "/Studio/Expeditions/10-Tech-&-Engineering/10-DevOps-&-Automation": "DevOps & Automation",
-    "/Studio/Expeditions/10-Tech-&-Engineering/10-DevOps-&-Automation/Kubernetes": "Kubernetes",
-    "/Studio/Expeditions/10-Tech-&-Engineering/10-DevOps-&-Automation/Terraform": "Terraform",
-    "/Studio/Expeditions/10-Tech-&-Engineering/11-Security-Engineering": "Security Engineering",
-    "/Studio/Expeditions/10-Tech-&-Engineering/12-Data-Systems": "Data Systems",
-    "/Studio/Expeditions/10-Tech-&-Engineering/13-Computational-Intelligence": "Computational Intelligence",
-    "/Studio/Expeditions/10-Tech-&-Engineering/14-Design-&-Interaction": "Design & Interaction",
-    "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Git": "Git",
-    "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities": "Tooling & Utilities",
-    "/Studio/Expeditions/10-Tech-&-Engineering/15-Tooling-&-Utilities/Secure-Shell": "Secure Shell (SSH)",
-    "/Studio/Expeditions": "Expeditions",
-    "/Studio/Ruminations": "Ruminations",
-    "/Workshop/Labs": "Labs",
-    "/Workshop/Projects/Asky": "Asky",
-    "/Workshop/Projects": "Projects"
+    "/Ruminations": "Ruminations",
+    "/Ruminations/Introduction-to-HLS": "Introduction to HLS",
+    "/Ruminations/Something-Nu": "Something Nu",
+    "/Workshop/Asky": "Asky",
+    "/Workshop": "Labs",
+    "/_Glossary/Definitions": "Definitions"
   }
 }
