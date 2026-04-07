@@ -13,3 +13,4 @@ This is a ==Highlight==
 
 <dfn data-term="DevOps">DevOps</dfn>
 
+<<< @/snippets/latest-pwsh-profile.ps1
